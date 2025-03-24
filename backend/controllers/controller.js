@@ -6,9 +6,15 @@ import adminModel from "../Models/adminSchema.js"
 
 let getHome = (req, res) => {
 
-    console.log("gethome route called !"),
-        res.status(200).json({ message: "This is a home route" })
+    console.log("gethome route called !")
 
+    res.status(200).json({ message: "This is a home route" })
+
+}
+let postHome = (req,res)=>{
+    console.log("post home route called !")
+    console.log(req.body)
+    res.status(202).json({message:"form submitted successfully !"})
 }
 
 let adminLogin = async (req, res) => {
@@ -20,7 +26,7 @@ let adminLogin = async (req, res) => {
         let { email, password } = req.body
         // check if we have email and password
         if (!email || !password) {
-            responseData.message = "Email or password is missing !",
+            responseData.message = "Email or password is missing !"
                 responseData.status = 400
             throw (responseData.message)
         }
@@ -30,7 +36,7 @@ let adminLogin = async (req, res) => {
 
         let adminExists = await adminModel.findOne({ "email": email })
         if (!adminExists) {
-            responseData.message = "Email doesn't exists !",
+            responseData.message = "Email doesn't exists !"
                 responseData.status = 400
             throw (responseData.message)
         }
@@ -39,14 +45,14 @@ let adminLogin = async (req, res) => {
         let verifypassword = await adminModel.findOne({ "email": email, "password": password })
 
         if (!verifypassword) {
-            responseData.message = "Email or password doen not match !",
+            responseData.message = "Email or password doen not match !"
                 responseData.status = 401
             throw (responseData.message)
         }
         // create the token (jwt)
         let generateToken = generatedToken(verifypassword.email)
         if (!generateToken) {
-            responseData.message = "unable to login | token error try again later !",
+            responseData.message = "unable to login | token error try again later !"
                 responseData.status = 500
             throw (responseData.message)
         }
@@ -55,7 +61,7 @@ let adminLogin = async (req, res) => {
 
         console.log(result)
 
-        res.status(202).json({message:"email and password matched !",token:generateToken})
+        res.status(202).json({message:"email and password matched !" , token : generateToken})
 
     } catch (err) {
         console.log(err)
@@ -73,4 +79,4 @@ let getDashboard = (req,res)=>{
 
 }
 
-export { getHome, adminLogin , getDashboard  }
+export { getHome, adminLogin , getDashboard ,postHome }
